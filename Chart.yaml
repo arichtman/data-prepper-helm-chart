@@ -2,6 +2,7 @@
 apiVersion: v2
 name: data-prepper
 description: OpenSearch Data Prepper
+icon: https://github.com/opensearch-project/data-prepper/raw/main/docs/images/DataPrepper_auto.svg
 
 type: application
 
