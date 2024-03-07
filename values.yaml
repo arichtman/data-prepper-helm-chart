@@ -34,11 +34,10 @@ service:
 
 dataPrepperConfig: {}
 # Pipeline config file, inline YAML
-pipelineConfig: {}
+pipelineConfig:
   # Escape hatch for using existing secrets.
   # All secret keys are mounted to the default pipelines directory as files
   # Each key should be a YAML file name, contents of valid YAML pipeline config
-pipelineConfig:
   fromSecret:
     enabled: false
     secretName: ''
