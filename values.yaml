@@ -34,8 +34,9 @@ service:
   type: ClusterIP
 
 dataPrepperConfig: {}
-# Pipeline config file, inline YAML
-pipelineConfig:
+pipeline:
+  # Pipeline config file, inline YAML
+  config: {}
   # Escape hatch for using existing secrets.
   # All secret keys are mounted to the default pipelines directory as files
   interpolateFromSecret:

@@ -62,10 +62,17 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Content-based name for configuration so it triggers a redeploy
+Content-based name for app configuration so it triggers a redeploy
 */}}
 {{- define "data-prepper.configName" -}}
 {{- include "data-prepper.fullname" . }}-{{ trunc 8 ( sha256sum ( toString .Values.dataPrepperConfig )) -}}
+{{- end }}
+
+{{/*
+Content-based name for pipeline config so it triggers a redeploy
+*/}}
+{{- define "data-prepper.pipelineConfigName" -}}
+{{- include "data-prepper.fullname" . }}-{{ trunc 8 ( sha256sum ( toString .Values.pipelineConfig )) -}}
 {{- end }}
 
 {{/*

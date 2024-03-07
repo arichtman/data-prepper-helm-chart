@@ -28,15 +28,15 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .Values.pipelineConfig.interpolateFromSecret.enabled }}
+      {{- if .Values.pipeline.interpolateFromSecret.enabled }}
       initContainers:
       - name: config-interpolator
         image: dibi/envsubst:1
         envFrom:
         - secretRef:
-            name: {{ .Values.pipelineConfig.interpolateFromSecret.secretName | default ( include "data-prepper.secretName" . ) }}
+            name: {{ .Values.pipeline.interpolateFromSecret.secretName | default ( include "data-prepper.secretName" . ) }}
         volumeMounts:
-        - name: config
+        - name: pipeline-ingest-config
           mountPath: /workdir
         - name: data-prepper-pipelines
           mountPath: /processed
@@ -98,24 +98,23 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-      {{- if .Values.pipelineConfig.interpolateFromSecret.enabled }}
-        - name: config
-          secret:
-          {{- if (.Values.pipelineConfig.interpolateFromSecret).secretName }}
-            secretName: {{ .Values.pipelineConfig.interpolateFromSecret.secretName }}
-          {{- else }}
-            secretName: {{ include "data-prepper.secretName" . }}
-          {{- end }}
+      {{- if .Values.pipeline.interpolateFromSecret.enabled }}
+        - name: pipeline-ingest-config
+          configMap:
+            name: {{ include "data-prepper.pipelineConfigName" . }}
       {{- end }}
         - name: data-prepper-config
           configMap:
             name: {{ include "data-prepper.configName" . }}
         - name: data-prepper-pipelines
-          {{- if .Values.pipelineConfig.interpolateFromSecret.enabled }}
+          {{- if .Values.pipeline.interpolateFromSecret.enabled }}
           emptyDir: {}
-          {{- else if (.Values.pipelineConfig.mountFromSecret).enabled }}
+          {{- else if (.Values.pipeline.mountFromSecret).enabled }}
           secret:
-            secretName: {{ .Values.pipelineConfig.mountFromSecret.secretName | default (include "data-prepper.secretName" .) }}
+            secretName: {{ .Values.pipeline.mountFromSecret.secretName | default (include "data-prepper.secretName" .) }}
+          {{- else }}
+          configMap:
+            name: {{ include "data-prepper.pipelineConfigName" . }}
           {{- end }}
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
