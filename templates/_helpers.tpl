@@ -65,5 +65,12 @@ Create the name of the service account to use
 Content-based name for configuration so it triggers a redeploy
 */}}
 {{- define "data-prepper.configName" -}}
-{{- include "data-prepper.fullname" . }}-{{ trunc 8 (sha256sum (cat .Values.dataPrepperConfig .Values.pipelineConfig )) -}}
+{{- include "data-prepper.fullname" . }}-{{ trunc 8 ( sha256sum ( toString .Values.dataPrepperConfig )) -}}
+{{- end }}
+
+{{/*
+Content-based name for configuration so it triggers a redeploy
+*/}}
+{{- define "data-prepper.secretName" -}}
+{{- include "data-prepper.fullname" . }}-{{ trunc 8 ( sha256sum ( toString .Values.secret) ) -}}
 {{- end }}
