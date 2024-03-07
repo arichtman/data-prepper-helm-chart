@@ -14,5 +14,9 @@ spec:
       targetPort: {{ .port }}
       protocol: TCP
   {{- end }}
+    - name: server
+      port: {{ (.Values.dataPrepperConfig).serverPort | default 4900 }}
+      targetPort: server
+      protocol: TCP
   selector:
     {{- include "data-prepper.selectorLabels" . | nindent 4 }}

@@ -10,6 +10,7 @@ image:
 imagePullSecrets: []
 nameOverride: ''
 fullnameOverride: ''
+deploymentAnnotations: {}
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -44,6 +45,7 @@ pipelineConfig:
 
 serviceMonitor:
   enabled: false
+  extraLabels: {}
   metricsEndpoints:
   - port: server
     path: /metrics/sys

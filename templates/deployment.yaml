@@ -5,6 +5,10 @@ metadata:
   name: {{ include "data-prepper.fullname" . }}
   labels:
     {{- include "data-prepper.labels" . | nindent 4 }}
+  {{- with .Values.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -20,7 +24,7 @@ spec:
       {{- end }}
       labels:
         {{- include "data-prepper.labels" . | nindent 8 }}
-  {{- with .Values.podLabels }}
+        {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
