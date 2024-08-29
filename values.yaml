@@ -12,6 +12,10 @@ nameOverride: ''
 fullnameOverride: ''
 deploymentAnnotations: {}
 
+deployment:
+  # Any valid log4j level
+  logLevel: error
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: false
