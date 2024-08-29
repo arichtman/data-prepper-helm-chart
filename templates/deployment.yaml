@@ -5,7 +5,7 @@ metadata:
   name: {{ include "data-prepper.fullname" . }}
   labels:
     {{- include "data-prepper.labels" . | nindent 4 }}
-  {{- with .Values.deploymentAnnotations }}
+  {{- with .Values.deployment.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -66,16 +66,15 @@ spec:
             - name: server
               containerPort: {{ (.Values.dataPrepperConfig).serverPort | default 4900 }}
               protocol: TCP
-          livenessProbe:
+          startupProbe:
             httpGet:
               path: /list
               port: server
               {{- if not ( empty (.Values.dataPrepperConfig).ssl ) }}
               scheme: HTTPS
               {{- end }}
-            periodSeconds: 10
-            initialDelaySeconds: 2
-            failureThreshold: 2
+            failureThreshold: {{ .Values.deployment.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.deployment.startupProbe.periodSeconds }}
           readinessProbe:
             httpGet:
               path: /list
@@ -83,6 +82,19 @@ spec:
               {{- if not ( empty (.Values.dataPrepperConfig).ssl ) }}
               scheme: HTTPS
               {{- end }}
+            periodSeconds: {{ .Values.deployment.readinessProbe.periodSeconds }}
+            initialDelaySeconds: {{ .Values.deployment.readinessProbe.initialDelaySeconds }}
+            failureThreshold: {{ .Values.deployment.readinessProbe.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /list
+              port: server
+              {{- if not ( empty (.Values.dataPrepperConfig).ssl ) }}
+              scheme: HTTPS
+              {{- end }}
+            periodSeconds: {{ .Values.deployment.livenessProbe.periodSeconds }}
+            initialDelaySeconds: {{ .Values.deployment.livenessProbe.initialDelaySeconds }}
+            failureThreshold: {{ .Values.deployment.livenessProbe.failureThreshold }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

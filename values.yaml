@@ -10,11 +10,23 @@ image:
 imagePullSecrets: []
 nameOverride: ''
 fullnameOverride: ''
-deploymentAnnotations: {}
 
 deployment:
+  # Annotations to add to the deployment
+  annotations: {}
   # Any valid log4j level
   logLevel: error
+  startupProbe:
+    failureThreshold: 10
+    periodSeconds: 2
+  readinessProbe:
+    initialDelaySeconds: 0
+    failureThreshold: 1
+    periodSeconds: 2
+  livenessProbe:
+    initialDelaySeconds: 0
+    failureThreshold: 2
+    periodSeconds: 2
 
 serviceAccount:
   # Specifies whether a service account should be created
